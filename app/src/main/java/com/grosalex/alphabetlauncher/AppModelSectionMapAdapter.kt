@@ -7,14 +7,15 @@ import android.view.ViewGroup
 /**
  * Created by grosalex on 23/11/2017.
  */
-class AppModelSectionMapAdapter(val items: AppModelSectionMap) : RecyclerView.Adapter<AppModelSectionViewHolder>() {
+class AppModelSectionMapAdapter(val items: AppModelSectionMap, val recycledViewPool: RecyclerView.RecycledViewPool) : RecyclerView.Adapter<AppModelSectionViewHolder>() {
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: AppModelSectionViewHolder?, position: Int) {
         val key = items.keys.elementAt(position)
         val item = items[key] ?: return
 
-        holder?.bind(key,item)
+        holder?.bind(key,item,recycledViewPool)
+        holder?.setIsRecyclable(false)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): AppModelSectionViewHolder =

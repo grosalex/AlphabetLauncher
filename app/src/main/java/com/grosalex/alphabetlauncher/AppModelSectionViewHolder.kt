@@ -4,7 +4,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
-import java.util.ArrayList
+import kotlin.collections.ArrayList
 
 /**
  * Created by grosalex on 23/11/2017.
@@ -16,7 +16,7 @@ class AppModelSectionViewHolder(view: View?) : RecyclerView.ViewHolder(view) {
     var gridLayoutManager = GridLayoutManager(view?.context, 3)
     lateinit var sectionAdapter: AppModelAdapter
 
-    fun bind(key: String, item: ArrayList<AppModel>) {
+    fun bind(key: String, item: ArrayList<AppModel>, recycledViewPool: RecyclerView.RecycledViewPool) {
         tvSection?.text = key
 
 
@@ -24,6 +24,7 @@ class AppModelSectionViewHolder(view: View?) : RecyclerView.ViewHolder(view) {
         sectionAdapter = AppModelAdapter(item)
 
         rvSection?.adapter = sectionAdapter
+        rvSection?.recycledViewPool = recycledViewPool
 
     }
 }
