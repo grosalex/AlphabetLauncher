@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.content.Intent
 import android.content.IntentFilter
 import android.view.View
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(), IndexItemClickListener {
@@ -39,6 +40,11 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         initMainRecyclerView()
 
         initindexRecyclerView()
+
+        ib_settings?.setOnClickListener {
+            var intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun initMainRecyclerView() {

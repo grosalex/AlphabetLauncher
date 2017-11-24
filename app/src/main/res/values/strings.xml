@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AlphabetLauncher</string>
+    <string name="allow_rotation">Allow rotation</string>
+    <string name="choose_a_background_picture">Choose a background picture</string>
 </resources>
