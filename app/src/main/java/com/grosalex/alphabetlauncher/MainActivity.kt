@@ -7,16 +7,25 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.content.Intent
 import android.content.IntentFilter
+import android.view.View
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), IndexItemClickListener {
+
+    override fun onClick(v: View, position: Int) {
+        rvMain?.scrollToPosition(position)
+    }
 
     private var rvMain: RecyclerView? = null
+    private var rvindex: RecyclerView? = null
+    private lateinit var indexLayoutManager: LinearLayoutManager
+    private lateinit var indexAdapter: IndexAdapter
+
     private lateinit var appModelSectionMap: AppModelSectionMap
 
     private lateinit var appModelSectionMapAdapter: AppModelSectionMapAdapter
 
-    private lateinit var gridLayoutManager: LinearLayoutManager
+    private lateinit var layoutManager: LinearLayoutManager
 
     private lateinit var appListenerReceiver: AppListener
     private lateinit var filter: IntentFilter
@@ -26,23 +35,39 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        // basics are here : http://arnab.ch/blog/2013/08/how-to-write-custom-launcher-app-in-android/
+
+        initMainRecyclerView()
+
+        initindexRecyclerView()
+    }
+
+    private fun initMainRecyclerView() {
+
         appModelSectionMap = AppModelSectionMap()
         rvMain = findViewById<RecyclerView>(R.id.rv_main)
         recycledViewPool = RecyclerView.RecycledViewPool()
-        recycledViewPool.setMaxRecycledViews(0,50)
+        recycledViewPool.setMaxRecycledViews(0, 50)
 
-        gridLayoutManager = LinearLayoutManager(this)
+        layoutManager = LinearLayoutManager(this)
         appModelSectionMapAdapter = AppModelSectionMapAdapter(appModelSectionMap, recycledViewPool)
 
-        rvMain?.layoutManager = gridLayoutManager
+        rvMain?.layoutManager = layoutManager
 
         rvMain?.adapter = appModelSectionMapAdapter
 
         getAllApp()
+    }
+
+    private fun initindexRecyclerView() {
+        indexLayoutManager = LinearLayoutManager(this)
+        indexAdapter = IndexAdapter(ArrayList(appModelSectionMap.keys), this )
+        rvindex = findViewById<RecyclerView>(R.id.rv_index)
+        rvindex?.layoutManager = indexLayoutManager
+        rvindex?.adapter = indexAdapter
 
 
     }
+
 
     private fun getAllApp() {
         appModelSectionMap.clear()
