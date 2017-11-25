@@ -133,6 +133,9 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         unregisterReceiver(appListenerReceiver)
     }
 
+    override fun onBackPressed() {
+        rvMain?.scrollToPosition(0)
+    }
 
     private inner class LoadAppTask : AsyncTask<Void, Int, Void>() {
         override fun onPreExecute() {
