@@ -1,5 +1,6 @@
 package com.grosalex.alphabetlauncher
 
+import android.app.WallpaperManager
 import android.content.pm.ApplicationInfo
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.content.pm.ActivityInfo
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import android.os.AsyncTask
+import android.widget.ImageView
 import android.widget.ProgressBar
 
 
@@ -37,10 +39,14 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
 
     private lateinit var recycledViewPool: RecyclerView.RecycledViewPool
 
+    private var ivWallPaper: ImageView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         pbvLoader = findViewById<ProgressBar>(R.id.progressBar)
+        ivWallPaper = findViewById(R.id.iv_wallpaper)
+
         initMainRecyclerView()
 
         initIndexRecyclerView()
@@ -53,6 +59,18 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        requestedOrientation = if (getSharedPreferences(SETTINGS, 0).getBoolean(ALLOW_ROTATION, false)) ActivityInfo.SCREEN_ORIENTATION_PORTRAIT else ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        ivWallPaper?.setImageDrawable(WallpaperManager.getInstance(this).drawable)
+
+        appListenerReceiver = AppListener(this)
+        filter = IntentFilter()
+        filter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        filter.addDataScheme("package");
+        this.registerReceiver(appListenerReceiver, filter)
+    }
 
     private fun initMainRecyclerView() {
 
@@ -112,17 +130,6 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
     }
 
 
-    override fun onResume() {
-        super.onResume()
-        requestedOrientation = if (getSharedPreferences(SETTINGS, 0).getBoolean(ALLOW_ROTATION, false)) ActivityInfo.SCREEN_ORIENTATION_PORTRAIT else ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-
-        appListenerReceiver = AppListener(this)
-        filter = IntentFilter()
-        filter.addAction(Intent.ACTION_PACKAGE_ADDED);
-        filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
-        filter.addDataScheme("package");
-        this.registerReceiver(appListenerReceiver, filter)
-    }
 
     override fun onPause() {
         super.onPause()
