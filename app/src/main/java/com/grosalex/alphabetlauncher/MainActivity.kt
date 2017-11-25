@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.ActivityInfo
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import android.os.AsyncTask
@@ -51,6 +52,7 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         LoadAppTask().execute()
 
     }
+
 
     private fun initMainRecyclerView() {
 
@@ -112,6 +114,8 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
 
     override fun onResume() {
         super.onResume()
+        requestedOrientation = if (getSharedPreferences(SETTINGS, 0).getBoolean(ALLOW_ROTATION, false)) ActivityInfo.SCREEN_ORIENTATION_PORTRAIT else ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+
         appListenerReceiver = AppListener(this)
         filter = IntentFilter()
         filter.addAction(Intent.ACTION_PACKAGE_ADDED);
