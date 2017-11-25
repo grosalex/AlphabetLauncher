@@ -110,10 +110,8 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
     }
 
     private fun addApp(applicationInfo: ApplicationInfo) {
-        if (!applicationInfo.name.isNullOrEmpty()) {
-            if (applicationInfo.packageName != null)
-                appModelSectionMap.add(AppModel(packageManager, applicationInfo))
-        }
+        if (packageManager.getLaunchIntentForPackage(applicationInfo.packageName) != null)
+            appModelSectionMap.add(AppModel(packageManager, applicationInfo))
     }
 
     fun packageWasRemoved() {
@@ -128,7 +126,6 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
             appModelSectionMapAdapter.notifyDataSetChanged()
         }
     }
-
 
 
     override fun onPause() {
