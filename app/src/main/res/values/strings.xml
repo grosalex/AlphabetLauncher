@@ -3,4 +3,6 @@
     <string name="allow_rotation">Disable rotation</string>
     <string name="choose_a_background_picture">Choose a background picture</string>
     <string name="settings">Settings</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
 </resources>

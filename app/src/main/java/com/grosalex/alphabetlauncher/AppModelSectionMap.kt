@@ -13,6 +13,6 @@ class AppModelSectionMap : TreeMap<String, ArrayList<AppModel>>() {
             this.put(key, ArrayList<AppModel>())
         }
 
-        this.get(key)?.add(appModel)
+        this[key]?.add(appModel)
     }
 }
