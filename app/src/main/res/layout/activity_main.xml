@@ -8,10 +8,24 @@
     tools:context="com.grosalex.alphabetlauncher.MainActivity">
 
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_main"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:id="@+id/rv_main"
         android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/rv_index"
@@ -19,26 +33,25 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_index"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:id="@+id/rv_index"
         android:layout_marginTop="@dimen/small_spacing"
-        app:layout_constraintTop_toBottomOf="@+id/ib_settings"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/rv_main"
         app:layout_constraintRight_toRightOf="parent"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/ib_settings" />
 
     <ImageButton
+        android:id="@+id/ib_settings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/ib_settings"
-        android:src="@drawable/ic_settings_white_24dp"
-        android:background="@android:color/transparent"
-        android:layout_marginTop="@dimen/spacing"
         android:layout_marginRight="@dimen/spacing"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="@dimen/spacing"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_settings_white_24dp"
+        app:layout_constraintBottom_toTopOf="@id/rv_index"
         app:layout_constraintLeft_toLeftOf="@id/rv_index"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/rv_index"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

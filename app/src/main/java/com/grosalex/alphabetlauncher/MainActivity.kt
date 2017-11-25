@@ -9,6 +9,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
+import android.os.AsyncTask
+import android.widget.ProgressBar
 
 
 class MainActivity : AppCompatActivity(), IndexItemClickListener {
@@ -19,6 +21,7 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
 
     private var rvMain: RecyclerView? = null
     private var rvindex: RecyclerView? = null
+    private var pbvLoader: ProgressBar? = null
     private lateinit var indexLayoutManager: LinearLayoutManager
     private lateinit var indexAdapter: IndexAdapter
 
@@ -36,15 +39,17 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        pbvLoader = findViewById<ProgressBar>(R.id.progressBar)
         initMainRecyclerView()
 
-        initindexRecyclerView()
+        initIndexRecyclerView()
 
         ib_settings?.setOnClickListener {
             var intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
         }
+        LoadAppTask().execute()
+
     }
 
     private fun initMainRecyclerView() {
@@ -61,12 +66,12 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
 
         rvMain?.adapter = appModelSectionMapAdapter
 
-        getAllApp()
+        //getAllApp()
     }
 
-    private fun initindexRecyclerView() {
+    private fun initIndexRecyclerView() {
         indexLayoutManager = LinearLayoutManager(this)
-        indexAdapter = IndexAdapter(ArrayList(appModelSectionMap.keys), this )
+        indexAdapter = IndexAdapter(ArrayList(appModelSectionMap.keys), this)
         rvindex = findViewById<RecyclerView>(R.id.rv_index)
         rvindex?.layoutManager = indexLayoutManager
         rvindex?.adapter = indexAdapter
@@ -82,7 +87,6 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         for (applicationInfo in allApp) {
             addApp(applicationInfo)
         }
-        appModelSectionMapAdapter.notifyDataSetChanged()
     }
 
     private fun addApp(applicationInfo: ApplicationInfo) {
@@ -93,7 +97,7 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
     }
 
     fun packageWasRemoved() {
-        getAllApp()
+        LoadAppTask().execute()
     }
 
     fun addPackage(data: String?) {
@@ -120,5 +124,31 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         super.onPause()
         unregisterReceiver(appListenerReceiver)
     }
+
+
+    private inner class LoadAppTask : AsyncTask<Void, Int, Void>() {
+        override fun onPreExecute() {
+            super.onPreExecute()
+            pbvLoader?.visibility = View.VISIBLE
+        }
+
+        override fun doInBackground(vararg params: Void?): Void? {
+            getAllApp()
+            return null
+        }
+
+        protected override fun onProgressUpdate(vararg values: Int?) {
+        }
+
+        override fun onPostExecute(result: Void?) {
+            super.onPostExecute(result)
+            appModelSectionMapAdapter.notifyDataSetChanged()
+            indexAdapter.items = ArrayList(appModelSectionMap.keys)
+            indexAdapter.notifyDataSetChanged()
+            pbvLoader?.visibility = View.GONE
+
+        }
+    }
+
 
 }

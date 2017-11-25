@@ -7,7 +7,7 @@ import android.view.ViewGroup
 /**
  * Created by grosalex on 23/11/2017.
  */
-class IndexAdapter(private val items: ArrayList<String>, private var indexItemClickListener: IndexItemClickListener) : RecyclerView.Adapter<IndexViewHolder>() {
+class IndexAdapter(var items: ArrayList<String>, private var indexItemClickListener: IndexItemClickListener) : RecyclerView.Adapter<IndexViewHolder>() {
     override fun onBindViewHolder(holder: IndexViewHolder, position: Int) {
         holder.bind(items[position])
         holder.itemView.setOnClickListener { indexItemClickListener.onClick(holder.itemView, position) }
