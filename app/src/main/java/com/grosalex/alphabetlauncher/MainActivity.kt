@@ -56,7 +56,12 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
             startActivity(intent)
         }
         LoadAppTask().execute()
-
+        appListenerReceiver = AppListener(this)
+        filter = IntentFilter()
+        filter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        filter.addDataScheme("package");
+        this.registerReceiver(appListenerReceiver, filter)
     }
 
     override fun onResume() {
@@ -64,12 +69,6 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         requestedOrientation = if (getSharedPreferences(SETTINGS, 0).getBoolean(ALLOW_ROTATION, false)) ActivityInfo.SCREEN_ORIENTATION_PORTRAIT else ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         ivWallPaper?.setImageDrawable(WallpaperManager.getInstance(this).drawable)
 
-        appListenerReceiver = AppListener(this)
-        filter = IntentFilter()
-        filter.addAction(Intent.ACTION_PACKAGE_ADDED);
-        filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
-        filter.addDataScheme("package");
-        this.registerReceiver(appListenerReceiver, filter)
     }
 
     private fun initMainRecyclerView() {
@@ -127,10 +126,9 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         }
     }
 
-
-    override fun onPause() {
-        super.onPause()
+    override fun onDestroy() {
         unregisterReceiver(appListenerReceiver)
+        super.onDestroy()
     }
 
     override fun onBackPressed() {
