@@ -1,5 +1,6 @@
 package com.grosalex.alphabetlauncher
 
+import android.app.WallpaperManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -7,6 +8,8 @@ import android.widget.CompoundButton
 import android.widget.Switch
 import android.widget.TextView
 import android.content.Intent
+import android.net.Uri
+import android.widget.ImageView
 import kotlinx.android.synthetic.main.activity_settings.*
 
 
@@ -22,8 +25,11 @@ class SettingsActivity : AppCompatActivity() {
 
     private var switchAllowRotation: Switch? = null
     private var tvAllowRotation: TextView? = null
+    private var ivBackground: ImageView? = null
 
     private var tvWallPaper: TextView? = null
+
+    private var tvFeedback: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +56,16 @@ class SettingsActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_SET_WALLPAPER)
             startActivity(Intent.createChooser(intent, "Select Wallpaper"))
         })
+
+        tvFeedback = findViewById(R.id.tv_feedback)
+        tvFeedback?.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse("market://details?id=com.grosalex.alphabetlauncher")
+            startActivity(intent)
+        }
+        ivBackground = findViewById(R.id.iv_background)
+        ivBackground?.setImageDrawable(WallpaperManager.getInstance(this).drawable)
+
 
         fab.setOnClickListener { finish() }
     }
