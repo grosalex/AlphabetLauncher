@@ -9,14 +9,8 @@ import android.util.Log
  * Created by grosalex on 23/11/2017.
  */
 
-class AppListener(val mainActivity: MainActivity) : BroadcastReceiver() {
+class AppListener(private val mainActivity: MainActivity) : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        Log.d(this.javaClass.name, intent.toString() + intent?.extras.toString())
-
-        for (string in intent?.extras?.keySet()!!) {
-            Log.d(this.javaClass.name, string + " : " + intent?.extras[string])
-        }
-
         when {
             Intent.ACTION_PACKAGE_ADDED.equals(intent?.action) -> {
                 mainActivity.addPackage(intent?.data.toString().removePrefix("package:"))
