@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager.MATCH_ALL
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import android.os.AsyncTask
@@ -100,8 +101,15 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
 
 
     private fun getAllApp() {
+
+        val intent = Intent(Intent.ACTION_MAIN, null)
+        intent.addCategory(Intent.CATEGORY_LAUNCHER)
+
+        val allApp: List<ApplicationInfo> = packageManager.queryIntentActivities(intent, MATCH_ALL)
+                .map { it.activityInfo }
+                .map { it.applicationInfo }
+
         appModelSectionMap.clear()
-        var allApp: List<ApplicationInfo> = packageManager.getInstalledApplications(0)
 
         for (applicationInfo in allApp) {
             addApp(applicationInfo)
