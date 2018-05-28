@@ -11,17 +11,12 @@ import android.util.Log
  */
 class AppModel {
     lateinit var appName: String
-    lateinit var appIcon: Drawable
     lateinit var appPackageName: String
 
-
-    constructor(packageManager: PackageManager, applicationInfo: ApplicationInfo){
+    constructor(packageManager: PackageManager, applicationInfo: ApplicationInfo) {
         appName = applicationInfo.loadLabel(packageManager).toString()
-        appIcon = applicationInfo.loadIcon(packageManager)
-        Log.d("APPMODEL", appName )
-        Log.d("APPMODEL pckagename", "" + applicationInfo.packageName )
-
         appPackageName = applicationInfo.packageName
     }
 
+    fun getIcon(packageManager: PackageManager?): Drawable? = packageManager?.getApplicationIcon(appPackageName)
 }

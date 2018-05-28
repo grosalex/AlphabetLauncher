@@ -10,7 +10,7 @@ class AppModelSectionMap : TreeMap<String, ArrayList<AppModel>>() {
     fun add(appModel: AppModel) {
         var key: String = appModel.appName.first().toUpperCase().toString()
         if (!this.containsKey(key)) {
-            this.put(key, ArrayList<AppModel>())
+            this[key] = ArrayList<AppModel>()
         }
 
         this[key]?.add(appModel)

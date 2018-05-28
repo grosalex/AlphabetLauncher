@@ -15,16 +15,16 @@ import android.support.v4.content.ContextCompat.startActivity
  * Created by grosalex on 23/11/2017.
  */
 class AppModelViewHolder(view: View?) : RecyclerView.ViewHolder(view) {
-    val tvAppModelName = view?.findViewById<TextView>(R.id.tv_app_model_name)
-    val ivAppModelIcon = view?.findViewById<ImageView>(R.id.iv_app_model_icon)
+    private val tvAppModelName = view?.findViewById<TextView>(R.id.tv_app_model_name)
+    private val ivAppModelIcon = view?.findViewById<ImageView>(R.id.iv_app_model_icon)
     fun bind(appModel: AppModel) {
         val context = itemView?.context
         tvAppModelName?.text = appModel.appName
-        ivAppModelIcon?.setImageDrawable(appModel.appIcon)
+        ivAppModelIcon?.setImageDrawable(appModel.getIcon(context?.packageManager))
 
         itemView?.setOnClickListener {
-            if (!appModel.appPackageName.isNullOrEmpty())
-                context?.startActivity(context?.packageManager.getLaunchIntentForPackage(appModel.appPackageName))
+            if (!appModel.appPackageName.isEmpty())
+                context?.startActivity(context.packageManager.getLaunchIntentForPackage(appModel.appPackageName))
         }
 
         itemView.setOnLongClickListener(View.OnLongClickListener {
