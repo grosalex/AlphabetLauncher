@@ -86,7 +86,6 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         super.onResume()
         requestedOrientation = if (getSharedPreferences(SETTINGS, 0).getBoolean(ALLOW_ROTATION, false)) ActivityInfo.SCREEN_ORIENTATION_PORTRAIT else ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         ivWallPaper?.setImageDrawable(WallpaperManager.getInstance(this).drawable)
-
     }
 
     private fun initMainRecyclerView() {
@@ -102,8 +101,6 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         rvMain?.layoutManager = layoutManager
 
         rvMain?.adapter = appModelSectionMapAdapter
-
-        //getAllApp()
     }
 
     private fun initIndexRecyclerView() {
@@ -112,10 +109,7 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         rvindex = findViewById<RecyclerView>(R.id.rv_index)
         rvindex?.layoutManager = indexLayoutManager
         rvindex?.adapter = indexAdapter
-
-
     }
-
 
     private fun getAllApp() {
         appModelSectionMap.clear()
@@ -124,7 +118,9 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         for (applicationInfo in allApp) {
             addApp(applicationInfo)
         }
+    }
 
+    private fun saveData() {
         val gson = Gson()
         val toJson = gson.toJson(appModelSectionMap)
         val pref = getSharedPreferences(APP_LIST, 0)
@@ -143,10 +139,9 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
     fun addPackage(data: String?) {
         val applicationInfo: ApplicationInfo = packageManager?.getApplicationInfo(data, 0) ?: return
 
-        if (applicationInfo != null) {
-            addApp(applicationInfo)
-            appModelSectionMapAdapter.notifyDataSetChanged()
-        }
+        addApp(applicationInfo)
+        appModelSectionMapAdapter.notifyDataSetChanged()
+        saveData()
     }
 
     override fun onDestroy() {
@@ -170,8 +165,7 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
             return null
         }
 
-        protected override fun onProgressUpdate(vararg values: Int?) {
-        }
+        override fun onProgressUpdate(vararg values: Int?) {}
 
         override fun onPostExecute(result: Void?) {
             super.onPostExecute(result)
@@ -179,13 +173,11 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
             indexAdapter.items = ArrayList(appModelSectionMap.keys)
             indexAdapter.notifyDataSetChanged()
             pbvLoader?.visibility = View.GONE
-
+            saveData()
         }
     }
 
     companion object {
         const val APP_LIST: String = "app_list"
     }
-
-
 }
