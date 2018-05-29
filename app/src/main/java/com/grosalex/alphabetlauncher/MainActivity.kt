@@ -12,7 +12,6 @@ import android.content.pm.ActivityInfo
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import android.os.AsyncTask
-import android.util.Log
 import android.widget.ImageView
 import android.widget.ProgressBar
 import com.google.gson.Gson
@@ -58,7 +57,9 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
             startActivity(intent)
         }
 
-        loadApp()
+        preLoadApp()
+        if (appModelSectionMap.isEmpty()) LoadAppTask().execute()
+
         appListenerReceiver = AppListener(this)
         filter = IntentFilter()
         filter.addAction(Intent.ACTION_PACKAGE_ADDED);
@@ -67,7 +68,7 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         this.registerReceiver(appListenerReceiver, filter)
     }
 
-    private fun loadApp() {
+    private fun preLoadApp() {
         val gson = Gson()
         val pref = getSharedPreferences(APP_LIST, 0)
         val fromJson = pref.getString(APP_LIST, null) ?: return
@@ -79,7 +80,6 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         indexAdapter.items = ArrayList(appModelSectionMap.keys)
         indexAdapter.notifyDataSetChanged()
 
-        if (appModelSectionMap.isEmpty()) LoadAppTask().execute()
     }
 
     override fun onResume() {
