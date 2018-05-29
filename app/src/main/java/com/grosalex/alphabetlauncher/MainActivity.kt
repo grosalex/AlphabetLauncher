@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import android.os.AsyncTask
 import android.widget.ImageView
 import android.widget.ProgressBar
+import com.google.gson.Gson
 
 
 class MainActivity : AppCompatActivity(), IndexItemClickListener {
@@ -52,16 +53,33 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         initIndexRecyclerView()
 
         ib_settings?.setOnClickListener {
-            var intent = Intent(this, SettingsActivity::class.java)
+            val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
         }
-        LoadAppTask().execute()
+
+        preLoadApp()
+        if (appModelSectionMap.isEmpty()) LoadAppTask().execute()
+
         appListenerReceiver = AppListener(this)
         filter = IntentFilter()
         filter.addAction(Intent.ACTION_PACKAGE_ADDED);
         filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
         filter.addDataScheme("package");
         this.registerReceiver(appListenerReceiver, filter)
+    }
+
+    private fun preLoadApp() {
+        val gson = Gson()
+        val pref = getSharedPreferences(APP_LIST, 0)
+        val fromJson = pref.getString(APP_LIST, null) ?: return
+        appModelSectionMap = gson.fromJson(fromJson, AppModelSectionMap::class.java) ?: return
+
+        appModelSectionMapAdapter.recycledViewPool = recycledViewPool
+        appModelSectionMapAdapter.items = appModelSectionMap
+        appModelSectionMapAdapter.notifyDataSetChanged()
+        indexAdapter.items = ArrayList(appModelSectionMap.keys)
+        indexAdapter.notifyDataSetChanged()
+
     }
 
     override fun onResume() {
@@ -101,11 +119,16 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
 
     private fun getAllApp() {
         appModelSectionMap.clear()
-        var allApp: List<ApplicationInfo> = packageManager.getInstalledApplications(0)
+        val allApp: List<ApplicationInfo> = packageManager.getInstalledApplications(0)
 
         for (applicationInfo in allApp) {
             addApp(applicationInfo)
         }
+
+        val gson = Gson()
+        val toJson = gson.toJson(appModelSectionMap)
+        val pref = getSharedPreferences(APP_LIST, 0)
+        pref.edit().putString(APP_LIST, toJson).apply()
     }
 
     private fun addApp(applicationInfo: ApplicationInfo) {
@@ -138,7 +161,8 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
     private inner class LoadAppTask : AsyncTask<Void, Int, Void>() {
         override fun onPreExecute() {
             super.onPreExecute()
-            pbvLoader?.visibility = View.VISIBLE
+            if (appModelSectionMap.isEmpty())
+                pbvLoader?.visibility = View.VISIBLE
         }
 
         override fun doInBackground(vararg params: Void?): Void? {
@@ -157,6 +181,10 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
             pbvLoader?.visibility = View.GONE
 
         }
+    }
+
+    companion object {
+        const val APP_LIST: String = "app_list"
     }
 
 
