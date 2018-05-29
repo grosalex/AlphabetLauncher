@@ -13,10 +13,19 @@ class AppModel {
     lateinit var appName: String
     lateinit var appPackageName: String
 
+    @Transient
+    private var appIcon: Drawable? = null
+
     constructor(packageManager: PackageManager, applicationInfo: ApplicationInfo) {
         appName = applicationInfo.loadLabel(packageManager).toString()
         appPackageName = applicationInfo.packageName
+        appIcon = applicationInfo.loadIcon(packageManager)
     }
 
-    fun getIcon(packageManager: PackageManager?): Drawable? = packageManager?.getApplicationIcon(appPackageName)
+    fun getIcon(packageManager: PackageManager): Drawable? = if (appIcon != null) {
+        appIcon
+    } else {
+        appIcon = packageManager.getApplicationIcon(appPackageName)
+        appIcon
+    }
 }

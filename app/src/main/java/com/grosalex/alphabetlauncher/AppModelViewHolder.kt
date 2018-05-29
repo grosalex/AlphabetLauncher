@@ -18,13 +18,13 @@ class AppModelViewHolder(view: View?) : RecyclerView.ViewHolder(view) {
     private val tvAppModelName = view?.findViewById<TextView>(R.id.tv_app_model_name)
     private val ivAppModelIcon = view?.findViewById<ImageView>(R.id.iv_app_model_icon)
     fun bind(appModel: AppModel) {
-        val context = itemView?.context
+        val context = itemView?.context?:return
         tvAppModelName?.text = appModel.appName
-        ivAppModelIcon?.setImageDrawable(appModel.getIcon(context?.packageManager))
+        ivAppModelIcon?.setImageDrawable(appModel.getIcon(context.packageManager))
 
-        itemView?.setOnClickListener {
+        itemView.setOnClickListener {
             if (!appModel.appPackageName.isEmpty())
-                context?.startActivity(context.packageManager.getLaunchIntentForPackage(appModel.appPackageName))
+                context.startActivity(context.packageManager.getLaunchIntentForPackage(appModel.appPackageName))
         }
 
         itemView.setOnLongClickListener(View.OnLongClickListener {

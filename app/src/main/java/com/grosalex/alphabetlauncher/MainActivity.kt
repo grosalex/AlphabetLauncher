@@ -70,8 +70,8 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
     private fun loadApp() {
         val gson = Gson()
         val pref = getSharedPreferences(APP_LIST, 0)
-        val s = pref.getString(APP_LIST, null) ?: return
-        appModelSectionMap = gson.fromJson(s, AppModelSectionMap::class.java) ?: return
+        val fromJson = pref.getString(APP_LIST, null) ?: return
+        appModelSectionMap = gson.fromJson(fromJson, AppModelSectionMap::class.java) ?: return
 
         appModelSectionMapAdapter.recycledViewPool = recycledViewPool
         appModelSectionMapAdapter.items = appModelSectionMap
@@ -123,11 +123,9 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
 
         for (applicationInfo in allApp) {
             addApp(applicationInfo)
-
         }
 
         val gson = Gson()
-
         val toJson = gson.toJson(appModelSectionMap)
         val pref = getSharedPreferences(APP_LIST, 0)
         pref.edit().putString(APP_LIST, toJson).apply()
