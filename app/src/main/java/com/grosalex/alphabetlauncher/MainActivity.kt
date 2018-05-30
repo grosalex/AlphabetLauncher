@@ -12,6 +12,8 @@ import android.content.pm.ActivityInfo
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import android.os.AsyncTask
+import android.os.Handler
+import android.text.format.DateUtils
 import android.widget.ImageView
 import android.widget.ProgressBar
 import com.google.gson.Gson
@@ -42,6 +44,10 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
 
     private var ivWallPaper: ImageView? = null
 
+    private val localHandler: Handler = Handler()
+
+    private val loadAppTaskRunnable = Runnable { LoadAppTask().execute() }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -59,6 +65,7 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
 
         preLoadApp()
         if (appModelSectionMap.isEmpty()) LoadAppTask().execute()
+        else localHandler.postDelayed(loadAppTaskRunnable, THIRTY_MINUTES)
 
         appListenerReceiver = AppListener(this)
         filter = IntentFilter()
@@ -174,10 +181,12 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
             indexAdapter.notifyDataSetChanged()
             pbvLoader?.visibility = View.GONE
             saveData()
+            localHandler.postDelayed(loadAppTaskRunnable, THIRTY_MINUTES)
         }
     }
 
     companion object {
         const val APP_LIST: String = "app_list"
+        const val THIRTY_MINUTES: Long = 30 * DateUtils.MINUTE_IN_MILLIS
     }
 }
