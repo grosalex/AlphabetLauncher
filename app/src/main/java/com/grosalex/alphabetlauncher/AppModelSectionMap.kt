@@ -8,9 +8,14 @@ import java.util.*
 class AppModelSectionMap : TreeMap<String, ArrayList<AppModel>>() {
     //  var appHash: = HashMap<String, ArrayList<AppModel>>()
     fun add(appModel: AppModel) {
-        var key: String = appModel.appName.first().toUpperCase().toString()
+        val key: String = appModel.appName.first().toUpperCase().toString()
         if (!this.containsKey(key)) {
             this[key] = ArrayList<AppModel>()
+        } else {
+            val listItems = this[key]
+            listItems?.forEach { item ->
+                if (item.appPackageName == appModel.appPackageName) return
+            }
         }
 
         this[key]?.add(appModel)

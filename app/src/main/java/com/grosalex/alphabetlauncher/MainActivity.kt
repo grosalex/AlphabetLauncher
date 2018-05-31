@@ -12,6 +12,8 @@ import android.content.pm.ActivityInfo
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import android.os.AsyncTask
+import android.os.Handler
+import android.text.format.DateUtils
 import android.widget.ImageView
 import android.widget.ProgressBar
 import com.google.gson.Gson
@@ -42,6 +44,10 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
 
     private var ivWallPaper: ImageView? = null
 
+    private val localHandler: Handler = Handler()
+
+    private val loadAppTaskRunnable = Runnable { LoadAppTask().execute() }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -59,6 +65,7 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
 
         preLoadApp()
         if (appModelSectionMap.isEmpty()) LoadAppTask().execute()
+        else localHandler.postDelayed(loadAppTaskRunnable, THIRTY_MINUTES)
 
         appListenerReceiver = AppListener(this)
         filter = IntentFilter()
@@ -86,7 +93,6 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         super.onResume()
         requestedOrientation = if (getSharedPreferences(SETTINGS, 0).getBoolean(ALLOW_ROTATION, false)) ActivityInfo.SCREEN_ORIENTATION_PORTRAIT else ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         ivWallPaper?.setImageDrawable(WallpaperManager.getInstance(this).drawable)
-
     }
 
     private fun initMainRecyclerView() {
@@ -102,8 +108,6 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         rvMain?.layoutManager = layoutManager
 
         rvMain?.adapter = appModelSectionMapAdapter
-
-        //getAllApp()
     }
 
     private fun initIndexRecyclerView() {
@@ -112,10 +116,7 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         rvindex = findViewById<RecyclerView>(R.id.rv_index)
         rvindex?.layoutManager = indexLayoutManager
         rvindex?.adapter = indexAdapter
-
-
     }
-
 
     private fun getAllApp() {
         appModelSectionMap.clear()
@@ -124,7 +125,9 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         for (applicationInfo in allApp) {
             addApp(applicationInfo)
         }
+    }
 
+    private fun saveData() {
         val gson = Gson()
         val toJson = gson.toJson(appModelSectionMap)
         val pref = getSharedPreferences(APP_LIST, 0)
@@ -143,10 +146,9 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
     fun addPackage(data: String?) {
         val applicationInfo: ApplicationInfo = packageManager?.getApplicationInfo(data, 0) ?: return
 
-        if (applicationInfo != null) {
-            addApp(applicationInfo)
-            appModelSectionMapAdapter.notifyDataSetChanged()
-        }
+        addApp(applicationInfo)
+        appModelSectionMapAdapter.notifyDataSetChanged()
+        saveData()
     }
 
     override fun onDestroy() {
@@ -170,8 +172,7 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
             return null
         }
 
-        protected override fun onProgressUpdate(vararg values: Int?) {
-        }
+        override fun onProgressUpdate(vararg values: Int?) {}
 
         override fun onPostExecute(result: Void?) {
             super.onPostExecute(result)
@@ -179,13 +180,13 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
             indexAdapter.items = ArrayList(appModelSectionMap.keys)
             indexAdapter.notifyDataSetChanged()
             pbvLoader?.visibility = View.GONE
-
+            saveData()
+            localHandler.postDelayed(loadAppTaskRunnable, THIRTY_MINUTES)
         }
     }
 
     companion object {
         const val APP_LIST: String = "app_list"
+        const val THIRTY_MINUTES: Long = 30 * DateUtils.MINUTE_IN_MILLIS
     }
-
-
 }
