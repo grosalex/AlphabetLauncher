@@ -23,14 +23,14 @@
         <activity android:name=".SettingsActivity">
 
         </activity>
-        <receiver android:name=".AppListener">
+       <!-- <receiver android:name=".AppListener">
             <intent-filter android:priority="999">
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
 
                 <data android:scheme="package" />
             </intent-filter>
-        </receiver>
+        </receiver>-->
     </application>
 
 </manifest>
