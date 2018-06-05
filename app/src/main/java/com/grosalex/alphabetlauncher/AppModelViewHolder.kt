@@ -20,11 +20,12 @@ class AppModelViewHolder(view: View?) : RecyclerView.ViewHolder(view) {
     fun bind(appModel: AppModel) {
         val context = itemView?.context?:return
         tvAppModelName?.text = appModel.appName
-        ivAppModelIcon?.setImageDrawable(appModel.getIcon(context.packageManager))
+        val packageManager = context.packageManager
+        ivAppModelIcon?.setImageDrawable(appModel.getIcon(packageManager)?: packageManager.defaultActivityIcon)
 
         itemView.setOnClickListener {
             if (!appModel.appPackageName.isEmpty())
-                context.startActivity(context.packageManager.getLaunchIntentForPackage(appModel.appPackageName))
+                context.startActivity(packageManager.getLaunchIntentForPackage(appModel.appPackageName))
         }
 
         itemView.setOnLongClickListener(View.OnLongClickListener {
@@ -32,13 +33,13 @@ class AppModelViewHolder(view: View?) : RecyclerView.ViewHolder(view) {
             alertDilog.setTitle("Uninstall ?")
             alertDilog.setMessage(String.format("Do you wish to install %s app ?", appModel.appName))
 
-            alertDilog.setButton(AlertDialog.BUTTON_POSITIVE, context?.getString(R.string.yes), { dialogInterface, i ->
+            alertDilog.setButton(AlertDialog.BUTTON_POSITIVE, context.getString(R.string.yes), { dialogInterface, i ->
                 val intent = Intent(Intent.ACTION_DELETE)
                 intent.data = Uri.parse("package:" + appModel.appPackageName)
                 startActivity(context, intent, Bundle())
             })
 
-            alertDilog.setButton(AlertDialog.BUTTON_NEGATIVE, context?.getString(R.string.no), { dialogInterface, i ->
+            alertDilog.setButton(AlertDialog.BUTTON_NEGATIVE, context.getString(R.string.no), { dialogInterface, i ->
                 dialogInterface.dismiss()
             })
 

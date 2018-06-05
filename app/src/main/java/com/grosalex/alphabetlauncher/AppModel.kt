@@ -25,7 +25,9 @@ class AppModel {
     fun getIcon(packageManager: PackageManager): Drawable? = if (appIcon != null) {
         appIcon
     } else {
-        appIcon = packageManager.getApplicationIcon(appPackageName)
+        try {
+            appIcon = packageManager.getApplicationIcon(appPackageName)
+        }catch (e : PackageManager.NameNotFoundException){ }
         appIcon
     }
 }
