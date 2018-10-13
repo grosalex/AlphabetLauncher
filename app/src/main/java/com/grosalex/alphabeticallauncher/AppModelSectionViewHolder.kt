@@ -1,4 +1,4 @@
-package com.grosalex.alphabetlauncher
+package com.grosalex.alphabeticallauncher
 
 import android.content.res.Configuration
 import android.support.v7.widget.GridLayoutManager

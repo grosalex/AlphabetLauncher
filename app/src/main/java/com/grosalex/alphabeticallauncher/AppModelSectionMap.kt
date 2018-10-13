@@ -1,4 +1,4 @@
-package com.grosalex.alphabetlauncher
+package com.grosalex.alphabeticallauncher
 
 import java.util.*
 

@@ -1,10 +1,9 @@
-package com.grosalex.alphabetlauncher
+package com.grosalex.alphabeticallauncher
 
 import android.app.WallpaperManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import android.widget.CompoundButton
 import android.widget.Switch
 import android.widget.TextView
 import android.content.Intent

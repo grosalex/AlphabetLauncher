@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
     android:fitsSystemWindows="true"
-    tools:context="com.grosalex.alphabetlauncher.MainActivity">
+    tools:context="com.grosalex.alphabeticallauncher.MainActivity">
 
     <ImageView
         android:layout_width="0dp"

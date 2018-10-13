@@ -1,4 +1,4 @@
-package com.grosalex.alphabetlauncher
+package com.grosalex.alphabeticallauncher
 
 import android.app.AlertDialog
 import android.support.v7.widget.RecyclerView

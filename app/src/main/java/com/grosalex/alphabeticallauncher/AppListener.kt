@@ -1,9 +1,8 @@
-package com.grosalex.alphabetlauncher
+package com.grosalex.alphabeticallauncher
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 
 /**
  * Created by grosalex on 23/11/2017.
