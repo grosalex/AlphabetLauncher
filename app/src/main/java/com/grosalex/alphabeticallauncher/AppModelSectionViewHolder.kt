@@ -10,11 +10,11 @@ import kotlin.collections.ArrayList
 /**
  * Created by grosalex on 23/11/2017.
  */
-class AppModelSectionViewHolder(view: View?) : RecyclerView.ViewHolder(view) {
+class AppModelSectionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-    var rvSection = view?.findViewById<RecyclerView>(R.id.rv_section)
-    var tvSection = view?.findViewById<TextView>(R.id.tv_section)
-    var gridLayoutManager = GridLayoutManager(view?.context,
+    var rvSection = view.findViewById<RecyclerView>(R.id.rv_section)
+    var tvSection = view.findViewById<TextView>(R.id.tv_section)
+    var gridLayoutManager = GridLayoutManager(view.context,
             when (itemView.context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK) {
                 Configuration.SCREENLAYOUT_SIZE_NORMAL -> 3
                 Configuration.SCREENLAYOUT_SIZE_LARGE -> 4
@@ -32,7 +32,7 @@ class AppModelSectionViewHolder(view: View?) : RecyclerView.ViewHolder(view) {
         sectionAdapter = AppModelAdapter(item)
 
         rvSection?.adapter = sectionAdapter
-        rvSection?.recycledViewPool = recycledViewPool
+        rvSection?.setRecycledViewPool(recycledViewPool)
 
     }
 }

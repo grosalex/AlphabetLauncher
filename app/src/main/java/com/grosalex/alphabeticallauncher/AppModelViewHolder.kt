@@ -20,12 +20,13 @@ import android.view.LayoutInflater
 import android.widget.PopupWindow
 
 
+@Suppress("UNNECESSARY_SAFE_CALL")
 /**
  * Created by grosalex on 23/11/2017.
  */
-class AppModelViewHolder(view: View?) : RecyclerView.ViewHolder(view) {
-    private val tvAppModelName = view?.findViewById<TextView>(R.id.tv_app_model_name)
-    private val ivAppModelIcon = view?.findViewById<ImageView>(R.id.iv_app_model_icon)
+class AppModelViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    private val tvAppModelName = view.findViewById<TextView>(R.id.tv_app_model_name)
+    private val ivAppModelIcon = view.findViewById<ImageView>(R.id.iv_app_model_icon)
 
     private var shortcutPopup: PopupWindow? = null
 

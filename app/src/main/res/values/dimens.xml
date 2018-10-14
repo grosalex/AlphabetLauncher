@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="small_x_spacing">4dp</dimen>
     <dimen name="small_spacing">8dp</dimen>
     <dimen name="spacing_large">16dp</dimen>
 </resources>
