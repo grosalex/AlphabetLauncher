@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager.MATCH_ALL
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import android.os.AsyncTask
@@ -16,6 +17,9 @@ import android.os.Handler
 import android.text.format.DateUtils
 import android.widget.ImageView
 import android.widget.ProgressBar
+import com.google.firebase.FirebaseApp
+import com.google.firebase.crash.FirebaseCrash
+import com.google.firebase.crash.FirebaseCrash.setCrashCollectionEnabled
 import com.google.gson.Gson
 
 
@@ -54,6 +58,11 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         pbvLoader = findViewById<ProgressBar>(R.id.progressBar)
         ivWallPaper = findViewById(R.id.iv_wallpaper)
 
+        if(BuildConfig.DEBUG ){
+            FirebaseCrash.setCrashCollectionEnabled(false);
+        }else {
+            FirebaseCrash.setCrashCollectionEnabled(true);
+        }
         initMainRecyclerView()
 
         initIndexRecyclerView()

@@ -10,7 +10,6 @@ import java.util.ArrayList
  */
 class AppModelAdapter(var items: ArrayList<AppModel>) : RecyclerView.Adapter<AppModelViewHolder>() {
     override fun onBindViewHolder(holder: AppModelViewHolder?, position: Int) {
-
         holder?.bind(items[position])
     }
 
