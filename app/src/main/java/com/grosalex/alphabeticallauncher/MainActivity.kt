@@ -1,5 +1,6 @@
 package com.grosalex.alphabeticallauncher
 
+import android.Manifest
 import android.app.WallpaperManager
 import android.content.pm.ApplicationInfo
 import android.support.v7.app.AppCompatActivity
@@ -9,7 +10,6 @@ import android.support.v7.widget.RecyclerView
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ActivityInfo
-import android.content.pm.PackageManager.MATCH_ALL
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import android.os.AsyncTask
@@ -17,10 +17,11 @@ import android.os.Handler
 import android.text.format.DateUtils
 import android.widget.ImageView
 import android.widget.ProgressBar
-import com.google.firebase.FirebaseApp
 import com.google.firebase.crash.FirebaseCrash
-import com.google.firebase.crash.FirebaseCrash.setCrashCollectionEnabled
 import com.google.gson.Gson
+import android.support.v4.app.ActivityCompat
+import android.content.pm.PackageManager
+import android.support.v4.content.ContextCompat
 
 
 class MainActivity : AppCompatActivity(), IndexItemClickListener {
@@ -58,9 +59,9 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         pbvLoader = findViewById<ProgressBar>(R.id.progressBar)
         ivWallPaper = findViewById(R.id.iv_wallpaper)
 
-        if(BuildConfig.DEBUG ){
+        if (BuildConfig.DEBUG) {
             FirebaseCrash.setCrashCollectionEnabled(false);
-        }else {
+        } else {
             FirebaseCrash.setCrashCollectionEnabled(true);
         }
         initMainRecyclerView()
@@ -101,7 +102,24 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
     override fun onResume() {
         super.onResume()
         requestedOrientation = if (getSharedPreferences(SETTINGS, 0).getBoolean(ALLOW_ROTATION, false)) ActivityInfo.SCREEN_ORIENTATION_PORTRAIT else ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-        ivWallPaper?.setImageDrawable(WallpaperManager.getInstance(this).drawable)
+
+        val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_READ_EXTERNAL_STORAGE)
+        } else {
+            ivWallPaper?.setImageDrawable(WallpaperManager.getInstance(this).drawable)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_READ_EXTERNAL_STORAGE -> if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                ivWallPaper?.setImageDrawable(WallpaperManager.getInstance(this).drawable)
+            }
+            else -> {
+            }
+        }
     }
 
     private fun initMainRecyclerView() {
@@ -197,5 +215,6 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
     companion object {
         const val APP_LIST: String = "app_list"
         const val THIRTY_MINUTES: Long = 30 * DateUtils.MINUTE_IN_MILLIS
+        const val REQUEST_READ_EXTERNAL_STORAGE: Int = 10
     }
 }
