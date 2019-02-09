@@ -30,6 +30,7 @@ class ShortcutListAdapter(private val shortcuts: List<Shortcut>, val onShortCutC
         holder.bind(shortcuts[position])
     }
 
+    // TODO extract in its own class
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val ivIcon: ImageView = itemView.findViewById(R.id.ivIcon)
         private val tvLabel: TextView = itemView.findViewById(R.id.tvLabel)
@@ -41,6 +42,7 @@ class ShortcutListAdapter(private val shortcuts: List<Shortcut>, val onShortCutC
             }
             tvLabel.text = shortcut.label
 
+            // TODO bind the delete depending on an internal id instead of as default
             shortcut.shortcutInfo?.let {
                 ivIcon.setImageDrawable(getShortcutIcon(itemView.context, it))
             } ?: run { ivIcon.setImageResource(R.drawable.ic_baseline_delete_forever_24px) }
