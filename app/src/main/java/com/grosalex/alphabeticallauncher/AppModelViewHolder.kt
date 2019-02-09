@@ -14,7 +14,6 @@ import java.util.*
 import android.os.Process
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.ListPopupWindow.WRAP_CONTENT
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.PopupWindow
@@ -30,6 +29,11 @@ class AppModelViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val ivAppModelIcon = view.findViewById<ImageView>(R.id.iv_app_model_icon)
 
     private var shortcutPopup: PopupWindow? = null
+    private val onShortCutClick = object : ShortcutListAdapter.onShortCutClicked {
+        override fun onClick() {
+            shortcutPopup?.dismiss()
+        }
+    }
 
     fun bind(appModel: AppModel) {
         val context = itemView?.context ?: return
@@ -51,14 +55,14 @@ class AppModelViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     }
 
     @RequiresApi(Build.VERSION_CODES.N_MR1)
-    fun getShortcutFromApp(context: Context, packageName: String): List<Shortcut> {
+    fun getShortcutFromApp(context: Context, packageName: String): MutableList<Shortcut> {
         val launcherApps = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
         val shortcutQuery = LauncherApps.ShortcutQuery()
         shortcutQuery.setQueryFlags(FLAG_MATCH_DYNAMIC or FLAG_MATCH_MANIFEST or FLAG_MATCH_PINNED)
         shortcutQuery.setPackage(packageName)
         return try {
             launcherApps.getShortcuts(shortcutQuery, Process.myUserHandle())
-                    .map { Shortcut(it.id, it.`package`, it.shortLabel.toString(), it) }
+                    .map { Shortcut(it.id, it.`package`, it.shortLabel.toString(), it) }.toMutableList()
         } catch (e: SecurityException) {
             Toast.makeText(itemView.context, R.string.shortcut_permission_missing, Toast.LENGTH_LONG).show()
             Collections.emptyList()
@@ -69,28 +73,31 @@ class AppModelViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private fun showPopup(app: AppModel, itemView: View): Boolean {
         val context = itemView.context
         val shortcuts = getShortcutFromApp(context, app.appPackageName)
-        if (shortcuts.isNotEmpty()) {
-            val contentView = createShortcutListView(context, shortcuts)
-            val locations = IntArray(2, { 0 })
-            itemView.getLocationOnScreen(locations)
-            shortcutPopup?.dismiss()
-            shortcutPopup = PopupWindow(contentView, WRAP_CONTENT, WRAP_CONTENT, true)
-            //shortcutPopup?.animationStyle = R.style.PopupAnimation
-            shortcutPopup?.showAtLocation(itemView, Gravity.NO_GRAVITY,
-                    locations[0] + itemView.width / 2,
-                    locations[1] + itemView.height / 2)
-        } else {
-            /* Toast.makeText(this, getString(R.string.no_shortcut), Toast.LENGTH_SHORT).show()*/
-            Log.e("showPopup", "oops")
-        }
+        shortcuts.add(createUninstallShortcut(app))
+        val contentView = createShortcutListView(context, shortcuts)
+        val locations = IntArray(2, { 0 })
+        itemView.getLocationOnScreen(locations)
+        shortcutPopup?.dismiss()
+        shortcutPopup = PopupWindow(contentView, WRAP_CONTENT, WRAP_CONTENT, true)
+        //shortcutPopup?.animationStyle = R.style.PopupAnimation
+        shortcutPopup?.showAtLocation(itemView, Gravity.NO_GRAVITY,
+                locations[0] + itemView.width / 2,
+                locations[1] + itemView.height / 2)
+
         return true
     }
+
+    private fun createUninstallShortcut(appModel: AppModel): Shortcut =
+            Shortcut(null,
+                    appModel.appPackageName,
+                    itemView.resources.getString(R.string.uninstall),
+                    null)
 
     @SuppressLint("InflateParams")
     private fun createShortcutListView(context: Context, shortcuts: List<Shortcut>): View {
         val view = LayoutInflater.from(context).inflate(R.layout.popup_shortcut, null)
         val shortcutList: RecyclerView = view.findViewById(R.id.shortcutList)
-        shortcutList.adapter = ShortcutListAdapter(shortcuts)
+        shortcutList.adapter = ShortcutListAdapter(shortcuts, onShortCutClick)
         shortcutList.layoutManager = LinearLayoutManager(context)
         return view
     }

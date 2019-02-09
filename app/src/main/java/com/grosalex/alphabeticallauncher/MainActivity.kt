@@ -1,6 +1,7 @@
 package com.grosalex.alphabeticallauncher
 
 import android.Manifest
+import android.Manifest.permission.REQUEST_DELETE_PACKAGES
 import android.app.WallpaperManager
 import android.content.pm.ApplicationInfo
 import android.support.v7.app.AppCompatActivity
@@ -103,12 +104,17 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         super.onResume()
         requestedOrientation = if (getSharedPreferences(SETTINGS, 0).getBoolean(ALLOW_ROTATION, false)) ActivityInfo.SCREEN_ORIENTATION_PORTRAIT else ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 
-        val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+        val readStoragepermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+        val requestDeletepermission = ContextCompat.checkSelfPermission(this, Manifest.permission.REQUEST_DELETE_PACKAGES)
 
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+        if (readStoragepermission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_READ_EXTERNAL_STORAGE)
         } else {
             ivWallPaper?.setImageDrawable(WallpaperManager.getInstance(this).drawable)
+        }
+
+        if (requestDeletepermission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.REQUEST_DELETE_PACKAGES), REQUEST_DELETE_PACKAGES)
         }
     }
 
@@ -216,5 +222,6 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         const val APP_LIST: String = "app_list"
         const val THIRTY_MINUTES: Long = 30 * DateUtils.MINUTE_IN_MILLIS
         const val REQUEST_READ_EXTERNAL_STORAGE: Int = 10
+        const val REQUEST_DELETE_PACKAGES: Int = 11
     }
 }
