@@ -13,8 +13,8 @@ class IndexAdapter(var items: ArrayList<String>, private var indexItemClickListe
         holder.itemView.setOnClickListener { indexItemClickListener.onClick(holder.itemView, position) }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): IndexViewHolder =
-            IndexViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.index_view_holder, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IndexViewHolder =
+            IndexViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.index_view_holder, parent, false))
 
     override fun getItemCount(): Int = items.size
 }

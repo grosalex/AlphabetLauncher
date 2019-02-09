@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.grosalex.alphabeticallauncher">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,14 +26,14 @@
         <activity android:name="com.grosalex.alphabeticallauncher.SettingsActivity">
 
         </activity>
-       <!-- <receiver android:name=".AppListener">
-            <intent-filter android:priority="999">
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+        <!-- <receiver android:name=".AppListener">
+             <intent-filter android:priority="999">
+                 <action android:name="android.intent.action.PACKAGE_ADDED" />
+                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
 
-                <data android:scheme="package" />
-            </intent-filter>
-        </receiver>-->
+                 <data android:scheme="package" />
+             </intent-filter>
+         </receiver>-->
     </application>
 
 </manifest>
