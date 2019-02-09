@@ -6,4 +6,5 @@
     <string name="settings">Settings</string>
     <string name="yes">yes</string>
     <string name="no">no</string>
+    <string name="shortcut_permission_missing">Sorry, we can\'t acces shortcuts until you made us your default laucher</string>
 </resources>

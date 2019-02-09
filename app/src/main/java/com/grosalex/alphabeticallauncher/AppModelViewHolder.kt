@@ -18,6 +18,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.PopupWindow
+import android.widget.Toast
 
 
 @Suppress("UNNECESSARY_SAFE_CALL")
@@ -59,6 +60,7 @@ class AppModelViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             launcherApps.getShortcuts(shortcutQuery, Process.myUserHandle())
                     .map { Shortcut(it.id, it.`package`, it.shortLabel.toString(), it) }
         } catch (e: SecurityException) {
+            Toast.makeText(itemView.context, R.string.shortcut_permission_missing, Toast.LENGTH_LONG).show()
             Collections.emptyList()
         }
     }
