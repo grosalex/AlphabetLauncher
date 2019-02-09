@@ -24,7 +24,6 @@ class SettingsActivity : AppCompatActivity() {
 
     private var switchAllowRotation: Switch? = null
     private var tvAllowRotation: TextView? = null
-    private var ivBackground: ImageView? = null
 
     private var tvWallPaper: TextView? = null
 
@@ -59,12 +58,9 @@ class SettingsActivity : AppCompatActivity() {
         tvFeedback = findViewById(R.id.tv_feedback)
         tvFeedback?.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse("market://details?id=com.grosalex.alphabetlauncher")
+            intent.data = Uri.parse("market://details?id=com.grosalex.alphabeticallauncher")
             startActivity(intent)
         }
-        ivBackground = findViewById(R.id.iv_background)
-        ivBackground?.setImageDrawable(WallpaperManager.getInstance(this).drawable)
-
 
         fab.setOnClickListener { finish() }
     }
