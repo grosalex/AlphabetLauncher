@@ -20,7 +20,6 @@ import android.widget.PopupWindow
 import android.widget.Toast
 
 
-@Suppress("UNNECESSARY_SAFE_CALL")
 /**
  * Created by grosalex on 23/11/2017.
  */
@@ -36,7 +35,7 @@ class AppModelViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     }
 
     fun bind(appModel: AppModel) {
-        val context = itemView?.context ?: return
+        val context = itemView.context ?: return
         tvAppModelName?.text = appModel.appName
         val packageManager = context.packageManager
         ivAppModelIcon?.setImageDrawable(appModel.getIcon(packageManager)
@@ -93,7 +92,6 @@ class AppModelViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                     itemView.resources.getString(R.string.uninstall),
                     null)
 
-    @SuppressLint("InflateParams")
     private fun createShortcutListView(context: Context, shortcuts: List<Shortcut>): View {
         val view = LayoutInflater.from(context).inflate(R.layout.popup_shortcut, null)
         val shortcutList: RecyclerView = view.findViewById(R.id.shortcutList)
