@@ -17,10 +17,13 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.PopupWindow
 import android.widget.Toast
+import com.grosalex.alphabeticallauncher.AlphabetLauncherApplication
 import com.grosalex.alphabeticallauncher.model.AppModel
 import com.grosalex.alphabeticallauncher.R
 import com.grosalex.alphabeticallauncher.model.Shortcut
 import com.grosalex.alphabeticallauncher.adapter.ShortcutListAdapter
+import com.grosalex.alphabeticallauncher.tracking.trackApplicationLongPressed
+import com.grosalex.alphabeticallauncher.tracking.trackApplicationStarted
 
 
 /**
@@ -39,18 +42,23 @@ class AppModelViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     fun bind(appModel: AppModel) {
         val context = itemView.context ?: return
-        tvAppModelName?.text = appModel.appName
+        val appName = appModel.appName
+        val appPackageName = appModel.appPackageName
+        tvAppModelName?.text = appName
         val packageManager = context.packageManager
         ivAppModelIcon?.setImageDrawable(appModel.getIcon(packageManager)
                 ?: packageManager.defaultActivityIcon)
 
         itemView.setOnClickListener {
-            if (!appModel.appPackageName.isEmpty())
-                context.startActivity(packageManager.getLaunchIntentForPackage(appModel.appPackageName))
+            if (!appPackageName.isEmpty()) {
+                context.startActivity(packageManager.getLaunchIntentForPackage(appPackageName))
+                AlphabetLauncherApplication.get(context).analytics.trackApplicationStarted(appName, appPackageName)
+            }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             itemView.setOnLongClickListener {
                 showPopup(appModel, itemView)
+                AlphabetLauncherApplication.get(context).analytics.trackApplicationLongPressed(appName, appPackageName)
                 true
             }
         }

@@ -17,8 +17,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.os.Process
 import android.support.v4.content.ContextCompat.startActivity
+import com.grosalex.alphabeticallauncher.AlphabetLauncherApplication
 import com.grosalex.alphabeticallauncher.R
 import com.grosalex.alphabeticallauncher.model.Shortcut
+import com.grosalex.alphabeticallauncher.tracking.shortcutClicked
 
 @TargetApi(Build.VERSION_CODES.N_MR1)
 class ShortcutListAdapter(private val shortcuts: List<Shortcut>, val onShortCutClick: onShortCutClicked)
@@ -40,6 +42,7 @@ class ShortcutListAdapter(private val shortcuts: List<Shortcut>, val onShortCutC
         fun bind(shortcut: Shortcut) {
             itemView.setOnClickListener {
                 startShortcut(itemView.context, shortcut)
+                AlphabetLauncherApplication.get(itemView.context).analytics.shortcutClicked(shortcut)
                 onShortCutClick.onClick()
             }
             tvLabel.text = shortcut.label
