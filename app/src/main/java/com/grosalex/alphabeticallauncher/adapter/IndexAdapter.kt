@@ -1,8 +1,11 @@
-package com.grosalex.alphabeticallauncher
+package com.grosalex.alphabeticallauncher.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.grosalex.alphabeticallauncher.listener.IndexItemClickListener
+import com.grosalex.alphabeticallauncher.R
+import com.grosalex.alphabeticallauncher.viewholder.IndexViewHolder
 
 /**
  * Created by grosalex on 23/11/2017.

@@ -1,8 +1,9 @@
-package com.grosalex.alphabeticallauncher
+package com.grosalex.alphabeticallauncher.viewholder
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
+import com.grosalex.alphabeticallauncher.R
 
 /**
  * Created by grosalex on 23/11/2017.

@@ -1,6 +1,5 @@
-package com.grosalex.alphabeticallauncher
+package com.grosalex.alphabeticallauncher.viewholder
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -18,6 +17,10 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.PopupWindow
 import android.widget.Toast
+import com.grosalex.alphabeticallauncher.model.AppModel
+import com.grosalex.alphabeticallauncher.R
+import com.grosalex.alphabeticallauncher.model.Shortcut
+import com.grosalex.alphabeticallauncher.adapter.ShortcutListAdapter
 
 
 /**

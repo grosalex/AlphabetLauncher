@@ -1,4 +1,4 @@
-package com.grosalex.alphabeticallauncher
+package com.grosalex.alphabeticallauncher.model
 
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager

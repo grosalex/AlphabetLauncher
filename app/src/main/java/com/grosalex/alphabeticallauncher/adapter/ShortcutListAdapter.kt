@@ -1,4 +1,4 @@
-package com.grosalex.alphabeticallauncher
+package com.grosalex.alphabeticallauncher.adapter
 
 import android.annotation.TargetApi
 import android.content.Context
@@ -17,6 +17,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.os.Process
 import android.support.v4.content.ContextCompat.startActivity
+import com.grosalex.alphabeticallauncher.R
+import com.grosalex.alphabeticallauncher.model.Shortcut
 
 @TargetApi(Build.VERSION_CODES.N_MR1)
 class ShortcutListAdapter(private val shortcuts: List<Shortcut>, val onShortCutClick: onShortCutClicked)

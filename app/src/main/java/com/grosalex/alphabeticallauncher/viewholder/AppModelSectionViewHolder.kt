@@ -1,10 +1,13 @@
-package com.grosalex.alphabeticallauncher
+package com.grosalex.alphabeticallauncher.viewholder
 
 import android.content.res.Configuration
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
+import com.grosalex.alphabeticallauncher.model.AppModel
+import com.grosalex.alphabeticallauncher.adapter.AppModelAdapter
+import com.grosalex.alphabeticallauncher.R
 import kotlin.collections.ArrayList
 
 /**

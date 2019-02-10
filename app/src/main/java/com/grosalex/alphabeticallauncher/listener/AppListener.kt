@@ -1,8 +1,9 @@
-package com.grosalex.alphabeticallauncher
+package com.grosalex.alphabeticallauncher.listener
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.grosalex.alphabeticallauncher.activity.MainActivity
 
 /**
  * Created by grosalex on 23/11/2017.

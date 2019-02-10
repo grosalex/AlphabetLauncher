@@ -1,4 +1,4 @@
-package com.grosalex.alphabeticallauncher
+package com.grosalex.alphabeticallauncher.listener
 
 import android.view.View
 

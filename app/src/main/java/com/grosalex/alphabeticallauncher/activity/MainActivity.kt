@@ -1,7 +1,6 @@
-package com.grosalex.alphabeticallauncher
+package com.grosalex.alphabeticallauncher.activity
 
 import android.Manifest
-import android.Manifest.permission.REQUEST_DELETE_PACKAGES
 import android.app.WallpaperManager
 import android.content.pm.ApplicationInfo
 import android.support.v7.app.AppCompatActivity
@@ -23,6 +22,13 @@ import com.google.gson.Gson
 import android.support.v4.app.ActivityCompat
 import android.content.pm.PackageManager
 import android.support.v4.content.ContextCompat
+import com.grosalex.alphabeticallauncher.*
+import com.grosalex.alphabeticallauncher.adapter.AppModelSectionMapAdapter
+import com.grosalex.alphabeticallauncher.adapter.IndexAdapter
+import com.grosalex.alphabeticallauncher.listener.AppListener
+import com.grosalex.alphabeticallauncher.listener.IndexItemClickListener
+import com.grosalex.alphabeticallauncher.model.AppModel
+import com.grosalex.alphabeticallauncher.model.AppModelSectionMap
 
 
 class MainActivity : AppCompatActivity(), IndexItemClickListener {

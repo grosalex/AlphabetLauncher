@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.grosalex.alphabeticallauncher.MainActivity"
+            android:name="com.grosalex.alphabeticallauncher.activity.MainActivity"
             android:theme="@style/MainTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.grosalex.alphabeticallauncher.SettingsActivity">
+        <activity android:name="com.grosalex.alphabeticallauncher.activity.SettingsActivity">
 
         </activity>
         <!-- <receiver android:name=".AppListener">

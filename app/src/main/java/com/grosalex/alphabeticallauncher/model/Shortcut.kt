@@ -1,4 +1,4 @@
-package com.grosalex.alphabeticallauncher
+package com.grosalex.alphabeticallauncher.model
 
 import android.content.pm.ShortcutInfo
 
