@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
 android {
@@ -42,9 +43,15 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
     // Add dependency
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
+
+    api "android.arch.lifecycle:extensions:$lifecycle_version"
+    kapt "android.arch.lifecycle:compiler:$lifecycle_version"
+
+    api "android.arch.persistence.room:runtime:$lifecycle_version"
+    kapt "android.arch.persistence.room:compiler:$lifecycle_version"
+
 }
 apply plugin: 'com.google.gms.google-services'
 repositories {
