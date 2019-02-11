@@ -21,6 +21,7 @@ import com.google.firebase.crash.FirebaseCrash
 import com.google.gson.Gson
 import android.support.v4.app.ActivityCompat
 import android.content.pm.PackageManager
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.ContextCompat
 import com.grosalex.alphabeticallauncher.*
 import com.grosalex.alphabeticallauncher.adapter.AppModelSectionMapAdapter
@@ -37,6 +38,7 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         rvMain?.scrollToPosition(position)
     }
 
+    private var fab: FloatingActionButton? = null
     private var rvMain: RecyclerView? = null
     private var rvindex: RecyclerView? = null
     private var pbvLoader: ProgressBar? = null
@@ -75,6 +77,8 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
 
         initIndexRecyclerView()
 
+        initFabAndFav()
+
         ib_settings?.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
@@ -90,6 +94,10 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
         filter.addDataScheme("package");
         this.registerReceiver(appListenerReceiver, filter)
+    }
+
+    private fun initFabAndFav() {
+        fab = findViewById(R.id.fab)
     }
 
     private fun preLoadApp() {
