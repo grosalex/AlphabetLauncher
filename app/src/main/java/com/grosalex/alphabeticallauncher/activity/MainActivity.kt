@@ -29,12 +29,14 @@ import com.grosalex.alphabeticallauncher.listener.AppListener
 import com.grosalex.alphabeticallauncher.listener.IndexItemClickListener
 import com.grosalex.alphabeticallauncher.model.AppModel
 import com.grosalex.alphabeticallauncher.model.AppModelSectionMap
+import com.grosalex.alphabeticallauncher.tracking.trackIndexClicked
 
 
 class MainActivity : AppCompatActivity(), IndexItemClickListener {
 
     override fun onClick(v: View, position: Int) {
         rvMain?.scrollToPosition(position)
+        AlphabetLauncherApplication.get(v.context).analytics.trackIndexClicked()
     }
 
     private var rvMain: RecyclerView? = null

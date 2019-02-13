@@ -5,6 +5,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.grosalex.alphabeticallauncher.model.Shortcut
 
 private const val EVENT_APP_LAUNCHED = "app_launched"
+private const val EVENT_INDEX_CLICKED = "index_clicked"
 private const val EVENT_APP_LONG_PRESSED = "app_long_pressed"
 private const val EVENT_SHORTCUT_CLICKED = "shortcut_clicked"
 
@@ -17,6 +18,10 @@ private const val KEY_SHORTCUT_LABEL = "shortcut_label"
 
 fun FirebaseAnalytics.trackApplicationStarted(appName: String, appPackageName: String) {
     logEvent(EVENT_APP_LAUNCHED, buildAppTrackBundle(appName, appPackageName))
+}
+
+fun FirebaseAnalytics.trackIndexClicked(){
+    logEvent(EVENT_INDEX_CLICKED, Bundle())
 }
 
 fun FirebaseAnalytics.trackApplicationLongPressed(appName: String, appPackageName: String) {
