@@ -2,37 +2,52 @@ package com.grosalex.alphabeticallauncher.activity
 
 import android.Manifest
 import android.app.WallpaperManager
-import android.content.pm.ApplicationInfo
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ActivityInfo
-import android.view.View
-import kotlinx.android.synthetic.main.activity_main.*
-import android.os.AsyncTask
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
+import android.os.Bundle
 import android.os.Handler
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.text.format.DateUtils
+import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import com.google.firebase.crash.FirebaseCrash
 import com.google.gson.Gson
-import android.support.v4.app.ActivityCompat
-import android.content.pm.PackageManager
-import android.support.v4.content.ContextCompat
-import com.grosalex.alphabeticallauncher.*
+import com.grosalex.alphabeticallauncher.AlphabetLauncherApplication
+import com.grosalex.alphabeticallauncher.BuildConfig
+import com.grosalex.alphabeticallauncher.R
 import com.grosalex.alphabeticallauncher.adapter.AppModelSectionMapAdapter
 import com.grosalex.alphabeticallauncher.adapter.IndexAdapter
+import com.grosalex.alphabeticallauncher.contract.AppsContract
+import com.grosalex.alphabeticallauncher.intractor.AppsIntractor
 import com.grosalex.alphabeticallauncher.listener.AppListener
 import com.grosalex.alphabeticallauncher.listener.IndexItemClickListener
 import com.grosalex.alphabeticallauncher.model.AppModel
 import com.grosalex.alphabeticallauncher.model.AppModelSectionMap
+import com.grosalex.alphabeticallauncher.presenter.AppsPresenter
 import com.grosalex.alphabeticallauncher.tracking.trackIndexClicked
+import kotlinx.android.synthetic.main.activity_main.*
 
+class MainActivity : AppCompatActivity(), AppsContract.View, IndexItemClickListener {
+    override fun updateAll(appModelSectionMap: AppModelSectionMap) {
+        appModelSectionMapAdapter.items = appModelSectionMap
+        appModelSectionMapAdapter.notifyDataSetChanged()
+        indexAdapter.items = ArrayList(this.appModelSectionMap.keys)
+        indexAdapter.notifyDataSetChanged()
+        pbvLoader?.visibility = View.GONE
+    }
 
-class MainActivity : AppCompatActivity(), IndexItemClickListener {
+    override fun refresh() {
+        if (appModelSectionMapAdapter.items.isEmpty())
+            pbvLoader?.visibility = View.VISIBLE
+    }
 
     override fun onClick(v: View, position: Int) {
         rvMain?.scrollToPosition(position)
@@ -60,7 +75,9 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
 
     private val localHandler: Handler = Handler()
 
-    private val loadAppTaskRunnable = Runnable { LoadAppTask().execute() }
+    private val loadAppTaskRunnable = Runnable { appsPresenter.loadApp() }
+
+    private lateinit var appsPresenter: AppsPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,9 +99,13 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
             startActivity(intent)
         }
 
-        preLoadApp()
-        if (appModelSectionMap.isEmpty()) LoadAppTask().execute()
-        else localHandler.postDelayed(loadAppTaskRunnable, THIRTY_MINUTES)
+        appsPresenter= AppsPresenter(this, AppsIntractor(this))
+        appsPresenter.loadApp()
+
+        /*     preLoadApp()
+             if (appModelSectionMap.isEmpty()) LoadAppTask().execute()
+             else */
+        localHandler.postDelayed(loadAppTaskRunnable, THIRTY_MINUTES)
 
         appListenerReceiver = AppListener(this)
         filter = IntentFilter()
@@ -94,7 +115,7 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         this.registerReceiver(appListenerReceiver, filter)
     }
 
-    private fun preLoadApp() {
+/*    private fun preLoadApp() {
         val gson = Gson()
         val pref = getSharedPreferences(APP_LIST, 0)
         val fromJson = pref.getString(APP_LIST, null) ?: return
@@ -106,7 +127,7 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         indexAdapter.items = ArrayList(appModelSectionMap.keys)
         indexAdapter.notifyDataSetChanged()
 
-    }
+    }*/
 
     override fun onResume() {
         super.onResume()
@@ -159,16 +180,16 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
         rvindex?.adapter = indexAdapter
     }
 
-    private fun getAllApp() {
+/*    private fun getAllApp() {
         appModelSectionMap.clear()
         val allApp: List<ApplicationInfo> = packageManager.getInstalledApplications(0)
 
         for (applicationInfo in allApp) {
             addApp(applicationInfo)
         }
-    }
+    }*/
 
-    private fun saveData() {
+/*    private fun saveData() {
         val gson = Gson()
         val toJson = gson.toJson(appModelSectionMap)
         val pref = getSharedPreferences(APP_LIST, 0)
@@ -178,18 +199,20 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
     private fun addApp(applicationInfo: ApplicationInfo) {
         if (packageManager.getLaunchIntentForPackage(applicationInfo.packageName) != null)
             appModelSectionMap.add(AppModel(packageManager, applicationInfo))
-    }
+    }*/
 
     fun packageWasRemoved() {
-        LoadAppTask().execute()
+        appsPresenter.loadApp()
     }
 
     fun addPackage(data: String?) {
-        val applicationInfo: ApplicationInfo = packageManager?.getApplicationInfo(data, 0) ?: return
+
+        appsPresenter.addApp(data)
+/*        val applicationInfo: ApplicationInfo = packageManager?.getApplicationInfo(data, 0) ?: return
 
         addApp(applicationInfo)
         appModelSectionMapAdapter.notifyDataSetChanged()
-        saveData()
+        saveData()*/
     }
 
     override fun onDestroy() {
@@ -200,6 +223,7 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
     override fun onBackPressed() {
         rvMain?.scrollToPosition(0)
     }
+/*
 
     private inner class LoadAppTask : AsyncTask<Void, Int, Void>() {
         override fun onPreExecute() {
@@ -225,6 +249,7 @@ class MainActivity : AppCompatActivity(), IndexItemClickListener {
             localHandler.postDelayed(loadAppTaskRunnable, THIRTY_MINUTES)
         }
     }
+*/
 
     companion object {
         const val APP_LIST: String = "app_list"
